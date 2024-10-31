@@ -11,7 +11,19 @@ A simple command-line tool that helps you quickly set up new Git repositories wi
 
 ## Installation
 
+### Option 1: Download Executable
 Download the latest `git-setup.exe` from the [releases page](https://github.com/ApexV2/git-setup/releases).
+
+### Option 2: NPM Installation
+You can install globally using npm:
+```bash
+npm install -g git-setup-cli
+```
+
+Or run directly using npx:
+```bash
+npx git-setup-cli
+```
 
 ## Usage
 
@@ -49,6 +61,7 @@ After completion, the tool will provide next steps for pushing your code.
 - Windows OS
 - Git installed on your system
 - Valid repository URL
+- Node.js (if installing via npm)
 
 ## Author
 
