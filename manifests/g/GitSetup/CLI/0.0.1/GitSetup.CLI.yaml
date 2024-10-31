@@ -1,0 +1,18 @@
+PackageIdentifier: GitSetup.CLI
+PackageVersion: 0.0.1
+PackageName: Git Setup CLI
+Publisher: ApexV2
+License: MIT
+ShortDescription: CLI tool to setup git repositories with support for Winget, Scoop, and Chocolatey
+Tags:
+  - git
+  - cli
+  - setup
+InstallerType: exe
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/ApexV2/git-setup/releases/download/v0.0.1/git-setup.exe
+    InstallerSha256: # You'll get this after building
+    Scope: user
+ManifestType: singleton
+ManifestVersion: 1.0.0 

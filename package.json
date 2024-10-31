@@ -1,6 +1,6 @@
 {
   "name": "git-setup-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "CLI tool to setup git repositories",
   "main": "bin/git-setup.js",
   "bin": {
@@ -9,5 +9,20 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "inquirer": "^8.2.6"
+  },
+  "pkg": {
+    "targets": ["node16-win-x64", "node16-macos-x64", "node16-linux-x64"],
+    "outputPath": "dist"
+  },
+  "scripts": {
+    "build": "pkg .",
+    "build:win": "pkg . --targets node16-win-x64 --output dist/git-setup.exe"
+  },
+  "keywords": ["git", "cli", "setup", "repository", "automation"],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/git-setup-cli"
   }
 }
