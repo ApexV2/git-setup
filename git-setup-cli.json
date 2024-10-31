@@ -1,9 +1,0 @@
-{
-    "version": "0.0.1",
-    "description": "CLI tool to setup git repositories",
-    "homepage": "https://github.com/ApexV2/git-setup",
-    "license": "MIT",
-    "url": "https://github.com/ApexV2/git-setup/releases/download/v0.0.1/git-setup.exe",
-    "bin": "git-setup.exe"
-} 
-

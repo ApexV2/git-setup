@@ -11,14 +11,13 @@
     "inquirer": "^8.2.6"
   },
   "pkg": {
-    "targets": ["node16-win-x64", "node16-macos-x64", "node16-linux-x64"],
+    "targets": ["node16-win-x64"],
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "pkg .",
-    "build:win": "pkg . --targets node16-win-x64 --output dist/git-setup.exe"
+    "build": "pkg . --targets node16-win-x64 --output dist/git-setup.exe"
   },
-  "keywords": ["git", "cli", "setup", "repository", "automation"],
+  "keywords": ["git", "cli", "setup", "repository"],
   "author": "ApexV2",
   "license": "MIT",
   "repository": {
