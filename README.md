@@ -1,40 +1,31 @@
 # Git Setup CLI
 
-A simple command-line tool that helps you quickly set up new Git repositories with an interactive prompt.
+A simple command-line tool that helps you quickly set up new Git repositories with an interactive prompt. This tool streamlines the process of initializing Git repositories and configuring remotes through an easy-to-use interface.
 
 ## Features
-
-- Interactive command-line interface
-- Initializes new Git repository
-- Configures remote repository
-- Sets up main branch
-- Provides helpful next steps
+- 🚀 Interactive command-line interface
+- 📁 Initializes new Git repository
+- 🔗 Configures remote repository
+- 🌿 Sets up main branch
+- 💡 Provides helpful next steps
 
 ## Installation
 
-You can install this package globally using npm:
-
-```bash
-npm install -g git-setup-cli
-```
-
-Or run it directly using npx:
-
-```bash
-npx git-setup-cli
-```
+Download the latest `git-setup.exe` from the [releases page](https://github.com/ApexV2/git-setup/releases).
 
 ## Usage
 
-1. Open your terminal
-2. Navigate to your project directory
-3. Run the command:
+The tool provides two main commands:
 
 ```bash
-git-setup
+# Start the setup process
+git-setup -s
+
+# View documentation
+git-setup -d
 ```
 
-The tool will prompt you for:
+When running the setup process, you'll be prompted for:
 - Remote name (defaults to "origin")
 - Remote repository URL
 - Main branch name (defaults to "main")
@@ -43,7 +34,7 @@ The tool will prompt you for:
 ## Example
 
 ```bash
-$ git-setup
+$ git-setup -s
 
 ? What is the remote name? (origin)
 ? What is the remote repository URL? https://github.com/username/repo.git
@@ -55,23 +46,15 @@ After completion, the tool will provide next steps for pushing your code.
 
 ## Requirements
 
-- Node.js (version 12 or higher)
-- npm (comes with Node.js)
+- Windows OS
 - Git installed on your system
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License.
+- Valid repository URL
 
 ## Author
 
 Created with ❤️ by ApexV2
+
+## License
+
+This project is licensed under the MIT License.
 
