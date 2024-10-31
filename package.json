@@ -1,6 +1,6 @@
 {
   "name": "git-setup-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI tool to setup git repositories",
   "main": "bin/git-setup.js",
   "bin": {
@@ -11,13 +11,20 @@
     "inquirer": "^8.2.6"
   },
   "pkg": {
-    "targets": ["node16-win-x64"],
+    "targets": [
+      "node16-win-x64"
+    ],
     "outputPath": "dist"
   },
   "scripts": {
     "build": "pkg . --targets node16-win-x64 --output dist/git-setup.exe"
   },
-  "keywords": ["git", "cli", "setup", "repository"],
+  "keywords": [
+    "git",
+    "cli",
+    "setup",
+    "repository"
+  ],
   "author": "ApexV2",
   "license": "MIT",
   "repository": {
