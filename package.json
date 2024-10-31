@@ -23,5 +23,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ApexV2/git-setup"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   }
 }
