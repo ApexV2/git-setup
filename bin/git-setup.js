@@ -44,7 +44,7 @@ async function setupGitRepo() {
         console.log(chalk.blue(`Setting up ${answers.branchName} branch...`));
         execSync(`git switch -c ${answers.branchName}`);
 
-        console.log(chalk.green('✨ Git repository setup completed successfully!'));
+        console.log(chalk.green('✨ Git repository setup completed!'));
         console.log(chalk.yellow('\nNext steps:'));
         console.log('1. Add your files: git add .');
         console.log('2. Make your first commit: git commit -m "Initial commit"');
