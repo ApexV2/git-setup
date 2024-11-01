@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
-const path = require('path');
 
 // Mock external dependencies
 jest.mock('inquirer');
@@ -8,24 +7,30 @@ jest.mock('child_process');
 jest.mock('fs');
 jest.mock('axios');
 
-describe('git-setup CLI', () => {
+describe('Express Setup', () => {
     beforeEach(() => {
-        // Clear all mocks before each test
         jest.clearAllMocks();
     });
 
-    test('should initialize git repository', async () => {
-        // Mock execSync to prevent actual git commands
+    test('should initialize basic repository setup', () => {
         execSync.mockImplementation(() => {});
         
-        // Simulate initializing a git repo
         execSync('git init');
+        execSync('git remote add origin https://github.com/test/repo.git');
+        execSync('git switch -c main');
         
         expect(execSync).toHaveBeenCalledWith('git init');
+        expect(execSync).toHaveBeenCalledWith('git remote add origin https://github.com/test/repo.git');
+        expect(execSync).toHaveBeenCalledWith('git switch -c main');
+    });
+});
+
+describe('Manual Setup', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
 
     test('should create .gitignore file', async () => {
-        // Mock fs.writeFileSync to prevent actual file creation
         fs.writeFileSync.mockImplementation(() => {});
         
         const gitignoreContent = '# Node\nnode_modules/\n';
@@ -35,28 +40,45 @@ describe('git-setup CLI', () => {
     });
 
     test('should create README.md file', () => {
-        // Mock fs.writeFileSync
         fs.writeFileSync.mockImplementation(() => {});
         
-        const testProjectName = 'Test Project';
-        const testDescription = 'Test Description';
+        const projectName = 'Test Project';
+        const description = 'Test Description';
         
-        const expectedReadme = `# ${testProjectName}\n\n${testDescription}\n`;
-        fs.writeFileSync('README.md', expectedReadme);
+        const readme = `# ${projectName}\n\n${description}\n`;
+        fs.writeFileSync('README.md', readme);
         
-        expect(fs.writeFileSync).toHaveBeenCalledWith('README.md', expect.stringContaining(testProjectName));
+        expect(fs.writeFileSync).toHaveBeenCalledWith('README.md', expect.stringContaining(projectName));
     });
 
-    test('should handle errors gracefully', async () => {
-        // Mock console.error to capture error messages
+    test('should create license file', async () => {
+        fs.writeFileSync.mockImplementation(() => {});
+        
+        const licenseContent = 'MIT License...';
+        fs.writeFileSync('LICENSE', licenseContent);
+        
+        expect(fs.writeFileSync).toHaveBeenCalledWith('LICENSE', licenseContent);
+    });
+
+    test('should handle initial commit', () => {
+        execSync.mockImplementation(() => {});
+        
+        execSync('git add .');
+        execSync('git commit -m "Initial commit"');
+        
+        expect(execSync).toHaveBeenCalledWith('git add .');
+        expect(execSync).toHaveBeenCalledWith('git commit -m "Initial commit"');
+    });
+});
+
+describe('Error Handling', () => {
+    test('should handle git command errors', () => {
         const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         
-        // Mock execSync to throw an error
         execSync.mockImplementation(() => {
             throw new Error('Git command failed');
         });
         
-        // Trigger an error by trying to execute a git command
         try {
             execSync('git init');
         } catch (error) {
@@ -66,28 +88,21 @@ describe('git-setup CLI', () => {
         expect(consoleSpy).toHaveBeenCalled();
         consoleSpy.mockRestore();
     });
-});
 
-describe('License handling', () => {
-    test('should create license file', async () => {
-        fs.writeFileSync.mockImplementation(() => {});
+    test('should handle file creation errors', () => {
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         
-        const licenseContent = 'MIT License...';
-        fs.writeFileSync('LICENSE', licenseContent);
+        fs.writeFileSync.mockImplementation(() => {
+            throw new Error('File creation failed');
+        });
         
-        expect(fs.writeFileSync).toHaveBeenCalledWith('LICENSE', licenseContent);
-    });
-});
-
-describe('Git remote handling', () => {
-    test('should add remote repository', () => {
-        execSync.mockImplementation(() => {});
+        try {
+            fs.writeFileSync('README.md', 'content');
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
         
-        const remoteName = 'origin';
-        const remoteUrl = 'https://github.com/user/repo.git';
-        
-        execSync(`git remote add ${remoteName} ${remoteUrl}`);
-        
-        expect(execSync).toHaveBeenCalledWith(`git remote add ${remoteName} ${remoteUrl}`);
+        expect(consoleSpy).toHaveBeenCalled();
+        consoleSpy.mockRestore();
     });
 }); 

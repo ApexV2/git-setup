@@ -13,13 +13,14 @@ const shortDocs = `
 ${chalk.bold('Git Setup CLI')} - Quick repository setup tool
 
 ${chalk.yellow('Usage:')}
-  git-setup -s    Start the setup process
+  git-setup -e    Express setup (basic configuration)
+  git-setup -m    Manual setup (full configuration)
   git-setup -d    Show this documentation
 
-${chalk.yellow('Example:')}
-  git-setup -s
+${chalk.yellow('Express Setup Example:')}
+  git-setup -e
   > What is the remote name? (origin)
-  > What is the remote repository URL? https://github.com/username/repo.git
+  > What is the remote repository URL?
   > What is your main branch name? (main)
   > Initialize a new repository? (Y/n)
 
@@ -42,7 +43,59 @@ const GITIGNORE_TEMPLATES = [
 
 const LICENSES = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'None'];
 
-async function setupGitRepo() {
+async function expressSetup() {
+    try {
+        const answers = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'remoteName',
+                message: 'What is the remote name?',
+                default: 'origin'
+            },
+            {
+                type: 'input',
+                name: 'remoteUrl',
+                message: 'What is the remote repository URL?',
+                validate: input => input.length > 0 || 'Remote URL is required'
+            },
+            {
+                type: 'input',
+                name: 'branchName',
+                message: 'What is your main branch name?',
+                default: 'main'
+            },
+            {
+                type: 'confirm',
+                name: 'initializeRepo',
+                message: 'Initialize a new repository?',
+                default: true
+            }
+        ]);
+
+        if (answers.initializeRepo) {
+            console.log(chalk.blue('Initializing git repository...'));
+            execSync('git init');
+        }
+
+        console.log(chalk.blue('Adding remote repository...'));
+        execSync(`git remote add ${answers.remoteName} ${answers.remoteUrl}`);
+
+        console.log(chalk.blue(`Setting up ${answers.branchName} branch...`));
+        execSync(`git switch -c ${answers.branchName}`);
+
+        console.log(chalk.green('✨ Express setup completed!'));
+        console.log(chalk.yellow('\nNext steps:'));
+        console.log('1. Add your files: git add .');
+        console.log('2. Make your first commit: git commit -m "Initial commit"');
+        console.log(`3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`);
+
+    } catch (error) {
+        console.error(chalk.red('Error setting up repository:'), error.message);
+        process.exit(1);
+    }
+}
+
+async function manualSetup() {
     try {
         const answers = await inquirer.prompt([
             {
