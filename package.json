@@ -18,7 +18,8 @@
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "pkg . --targets node16-win-x64 --output dist/git-setup.exe"
+    "build": "pkg . --targets node16-win-x64 --output dist/git-setup.exe",
+    "test": "jest"
   },
   "keywords": [
     "git",
@@ -35,5 +36,8 @@
   "private": false,
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

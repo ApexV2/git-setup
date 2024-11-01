@@ -53,6 +53,7 @@ Thumbs.db
 
 # Testing
 coverage/
+.jest/
 .nyc_output/
 
 # Build outputs
