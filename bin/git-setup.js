@@ -5,6 +5,8 @@ const { execSync } = require('child_process');
 const chalk = require('chalk');
 const fs = require('fs');
 const axios = require('axios');
+const path = require('path');
+const { program } = require('commander');
 
 // Documentation text
 const shortDocs = `
@@ -27,13 +29,18 @@ ${chalk.yellow('Requirements:')}
 `;
 
 const GITIGNORE_TEMPLATES = [
-    'Node.js', 'Python', 'Java', 'Ruby', 'Go',
-    'Visual Studio Code', 'JetBrains', 'macOS', 'Windows'
+    'Node.js',
+    'Python',
+    'Java',
+    'Ruby',
+    'Go',
+    'Visual Studio Code',
+    'JetBrains',
+    'macOS',
+    'Windows',
 ];
 
-const LICENSES = [
-    'MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'None'
-];
+const LICENSES = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'None'];
 
 async function setupGitRepo() {
     try {
@@ -42,67 +49,68 @@ async function setupGitRepo() {
                 type: 'input',
                 name: 'remoteName',
                 message: 'What is the remote name?',
-                default: 'origin'
+                default: 'origin',
             },
             {
                 type: 'input',
                 name: 'remoteUrl',
                 message: 'What is the remote repository URL?',
-                validate: input => input.length > 0 || 'Remote URL is required'
+                validate: (input) =>
+                    input.length > 0 || 'Remote URL is required',
             },
             {
                 type: 'input',
                 name: 'branchName',
                 message: 'What is your main branch name?',
-                default: 'main'
+                default: 'main',
             },
-            {
-                type: 'confirm',
-                name: 'initializeRepo',
-                message: 'Initialize a new repository?',
-                default: true
-            },
+            // {
+            //     type: 'confirm',
+            //     name: 'initializeRepo',
+            //     message: 'Initialize a new repository?',
+            //     default: true
+            // },
             {
                 type: 'confirm',
                 name: 'addGitignore',
                 message: 'Would you like to add a .gitignore file?',
-                default: true
+                default: true,
             },
             {
                 type: 'list',
                 name: 'gitignoreTemplate',
                 message: 'Choose a .gitignore template:',
                 choices: GITIGNORE_TEMPLATES,
-                when: (answers) => answers.addGitignore
+                when: (answers) => answers.addGitignore,
             },
             {
                 type: 'list',
                 name: 'license',
                 message: 'Choose a license for your repository:',
                 choices: LICENSES,
-                default: 'MIT'
+                default: 'MIT',
             },
             {
                 type: 'input',
                 name: 'projectName',
                 message: 'What is your project name?',
-                default: process.cwd().split('/').pop()
+                default: process.cwd().split('/').pop(),
             },
             {
                 type: 'input',
                 name: 'description',
                 message: 'Brief project description:',
-                default: 'A new awesome project'
+                default: 'A new awesome project',
             },
             {
                 type: 'confirm',
                 name: 'initialCommit',
                 message: 'Create initial commit?',
-                default: true
-            }
+                default: true,
+            },
         ]);
 
-        if (answers.initializeRepo) {
+        if (fs.existsSync(path.join(__dirname, '.git'))) {
             console.log(chalk.blue('Initializing git repository...'));
             execSync('git init');
         }
@@ -134,9 +142,12 @@ async function setupGitRepo() {
         console.log(chalk.green('✨ Git repository setup completed!'));
         console.log(chalk.yellow('\nNext steps:'));
         console.log('1. Add your files: git add .');
-        console.log('2. Make your first commit: git commit -m "Initial commit"');
-        console.log(`3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`);
-
+        console.log(
+            '2. Make your first commit: git commit -m "Initial commit"'
+        );
+        console.log(
+            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
+        );
     } catch (error) {
         console.error(chalk.red('Error setting up repository:'), error.message);
         process.exit(1);
@@ -151,13 +162,16 @@ async function createGitignore(template) {
         fs.writeFileSync('.gitignore', response.data);
         console.log(chalk.green('✨ Created .gitignore file'));
     } catch (error) {
-        console.error(chalk.yellow('Warning: Could not create .gitignore file'), error.message);
+        console.error(
+            chalk.yellow('Warning: Could not create .gitignore file'),
+            error.message
+        );
     }
 }
 
 async function createLicense(license) {
     if (license === 'None') return;
-    
+
     try {
         const response = await axios.get(
             `https://api.github.com/licenses/${license}`
@@ -165,7 +179,10 @@ async function createLicense(license) {
         fs.writeFileSync('LICENSE', response.data.body);
         console.log(chalk.green('✨ Created LICENSE file'));
     } catch (error) {
-        console.error(chalk.yellow('Warning: Could not create LICENSE file'), error.message);
+        console.error(
+            chalk.yellow('Warning: Could not create LICENSE file'),
+            error.message
+        );
     }
 }
 
@@ -195,29 +212,18 @@ This project is licensed under the ${answers.license} License - see the [LICENSE
     console.log(chalk.green('✨ Created README.md file'));
 }
 
-// Main function to handle command line arguments
-function main() {
-    const args = process.argv.slice(2);
-    
-    if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
-        console.log(chalk.red('Error: Missing required argument\n'));
-        console.log(shortDocs);
-        process.exit(1);
-    }
+const pjson = require('../package.json');
 
-    switch (args[0]) {
-        case '-s':
-            setupGitRepo();
-            break;
-        case '-d':
-            console.log(shortDocs);
-            break;
-        default:
-            console.log(chalk.red('Error: Invalid argument\n'));
-            console.log(shortDocs);
-            process.exit(1);
-    }
+program
+    .version(pjson.version)
+    .description(pjson.description)
+    .option('-h --help', 'Show documentation');
+
+program.parse();
+
+if (program.opts().help) {
+    console.log(shortDocs);
+    process.exit(0);
 }
 
-// Run the program
-main(); 
+setupGitRepo();
