@@ -7,7 +7,6 @@ import fs from 'fs';
 import axios from 'axios';
 import path from 'path';
 import { program } from 'commander';
-import inquirerSearchList from 'inquirer-search-list';
 
 // Documentation text
 const shortDocs = `
@@ -89,12 +88,10 @@ async function expressSetup() {
             `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
         );
     } catch (error) {
-        console.error(chalk.red('Error setting up repository:'), error.message);
+        console.error(chalk.red('Error setting up repository:'), error);
         process.exit(1);
     }
 }
-
-inquirer.registerPrompt('search-list', inquirerSearchList);
 
 async function manualSetup() {
     try {
@@ -131,7 +128,7 @@ async function manualSetup() {
                 default: true,
             },
             {
-                type: 'search-list',
+                type: 'search',
                 name: 'gitignoreTemplate',
                 message: 'Choose a .gitignore template (type to search):',
                 choices: GITIGNORE_TEMPLATES,
@@ -203,12 +200,12 @@ async function manualSetup() {
             `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
         );
     } catch (error) {
-        console.error(chalk.red('Error setting up repository:'), error.message);
+        console.error(chalk.red('Error setting up repository:'), error);
         process.exit(1);
     }
 }
 
-async function createGitignore(template) {
+async function createGitignore(template: string) {
     try {
         const response = await axios.get(
             `https://raw.githubusercontent.com/github/gitignore/main/${template}.gitignore`
@@ -218,12 +215,12 @@ async function createGitignore(template) {
     } catch (error) {
         console.error(
             chalk.yellow('Warning: Could not create .gitignore file'),
-            error.message
+            error
         );
     }
 }
 
-async function createLicense(license) {
+async function createLicense(license: string) {
     if (license === 'None') return;
 
     try {
@@ -235,12 +232,12 @@ async function createLicense(license) {
     } catch (error) {
         console.error(
             chalk.yellow('Warning: Could not create LICENSE file'),
-            error.message
+            error
         );
     }
 }
 
-function createReadme(answers) {
+function createReadme(answers: any) {
     const readme = `# ${answers.projectName}
 
 ${answers.description}
@@ -266,7 +263,7 @@ This project is licensed under the ${answers.license} License - see the [LICENSE
     console.log(chalk.green('✨ Created README.md file'));
 }
 
-const pjson = JSON.parse(fs.readFileSync('package.json'));
+const pjson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
 program
     .version(pjson.version)
