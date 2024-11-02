@@ -270,13 +270,15 @@ const pjson = require('../package.json');
 program
     .version(pjson.version)
     .description(pjson.description)
-    .option('-h --help', 'Show documentation');
+    .option('-h --help', 'Show documentation')
+    .option('-c --custom', 'Custom Setup');
 
 program.parse();
 
 if (program.opts().help) {
     console.log(shortDocs);
-    process.exit(0);
+} else if (program.opts().custom) {
+    manualSetup()
+} else {
+    setupGitRepo();
 }
-
-setupGitRepo();
