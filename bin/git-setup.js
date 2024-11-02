@@ -68,7 +68,7 @@ async function expressSetup() {
             // },
         ]);
 
-        if (answers.initializeRepo) {
+        if (fs.existsSync(path.join(__dirname, '.git'))) {
             console.log(chalk.blue('Initializing git repository...'));
             execSync('git init');
         }
