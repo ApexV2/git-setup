@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-const inquirer = require('inquirer');
-const { execSync } = require('child_process');
-const chalk = require('chalk');
-const fs = require('fs');
-const axios = require('axios');
-const path = require('path');
-const { program } = require('commander');
+import inquirer from 'inquirer';
+import { execSync } from 'child_process';
+import chalk from 'chalk';
+import fs from 'fs';
+import axios from 'axios';
+import path from 'path';
+import { program } from 'commander';
+import inquirerSearchList from 'inquirer-search-list';
 
 // Documentation text
 const shortDocs = `
@@ -29,17 +30,9 @@ ${chalk.yellow('Requirements:')}
   - Valid repository URL
 `;
 
-const GITIGNORE_TEMPLATES = [
-    'Node.js',
-    'Python',
-    'Java',
-    'Ruby',
-    'Go',
-    'Visual Studio Code',
-    'JetBrains',
-    'macOS',
-    'Windows',
-];
+let res = await axios.get('https://api.github.com/gitignore/templates');
+
+const GITIGNORE_TEMPLATES = res.data;
 
 const LICENSES = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'None'];
 
@@ -50,26 +43,27 @@ async function expressSetup() {
                 type: 'input',
                 name: 'remoteName',
                 message: 'What is the remote name?',
-                default: 'origin'
+                default: 'origin',
             },
             {
                 type: 'input',
                 name: 'remoteUrl',
                 message: 'What is the remote repository URL?',
-                validate: input => input.length > 0 || 'Remote URL is required'
+                validate: (input) =>
+                    input.length > 0 || 'Remote URL is required',
             },
             {
                 type: 'input',
                 name: 'branchName',
                 message: 'What is your main branch name?',
-                default: 'main'
+                default: 'main',
             },
-            {
-                type: 'confirm',
-                name: 'initializeRepo',
-                message: 'Initialize a new repository?',
-                default: true
-            }
+            // {
+            //     type: 'confirm',
+            //     name: 'initializeRepo',
+            //     message: 'Initialize a new repository?',
+            //     default: true,
+            // },
         ]);
 
         if (answers.initializeRepo) {
@@ -86,14 +80,19 @@ async function expressSetup() {
         console.log(chalk.green('✨ Express setup completed!'));
         console.log(chalk.yellow('\nNext steps:'));
         console.log('1. Add your files: git add .');
-        console.log('2. Make your first commit: git commit -m "Initial commit"');
-        console.log(`3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`);
-
+        console.log(
+            '2. Make your first commit: git commit -m "Initial commit"'
+        );
+        console.log(
+            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
+        );
     } catch (error) {
         console.error(chalk.red('Error setting up repository:'), error.message);
         process.exit(1);
     }
 }
+
+inquirer.registerPrompt('search-list', inquirerSearchList);
 
 async function manualSetup() {
     try {
@@ -130,9 +129,9 @@ async function manualSetup() {
                 default: true,
             },
             {
-                type: 'list',
+                type: 'search-list',
                 name: 'gitignoreTemplate',
-                message: 'Choose a .gitignore template:',
+                message: 'Choose a .gitignore template (type to search):',
                 choices: GITIGNORE_TEMPLATES,
                 when: (answers) => answers.addGitignore,
             },
@@ -265,7 +264,7 @@ This project is licensed under the ${answers.license} License - see the [LICENSE
     console.log(chalk.green('✨ Created README.md file'));
 }
 
-const pjson = require('../package.json');
+const pjson = JSON.parse(fs.readFileSync('package.json'));
 
 program
     .version(pjson.version)
@@ -278,7 +277,7 @@ program.parse();
 if (program.opts().help) {
     console.log(shortDocs);
 } else if (program.opts().custom) {
-    manualSetup()
+    manualSetup();
 } else {
-    setupGitRepo();
+    expressSetup();
 }
