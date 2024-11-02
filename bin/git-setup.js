@@ -34,7 +34,9 @@ let res = await axios.get('https://api.github.com/gitignore/templates');
 
 const GITIGNORE_TEMPLATES = res.data;
 
-const LICENSES = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'None'];
+res = await axios.get('https://api.github.com/licenses')
+
+const LICENSES = res.data;
 
 async function expressSetup() {
     try {
@@ -136,7 +138,7 @@ async function manualSetup() {
                 when: (answers) => answers.addGitignore,
             },
             {
-                type: 'list',
+                type: 'search-list',
                 name: 'license',
                 message: 'Choose a license for your repository:',
                 choices: LICENSES,
