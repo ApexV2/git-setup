@@ -2,17 +2,16 @@
   "name": "git-setup-cli",
   "version": "0.0.5",
   "description": "CLI tool to setup git repositories",
-  "main": "bin/git-setup.js",
+  "main": "dist/git-setup.js",
   "type": "module",
   "bin": {
-    "git-setup": "./bin/git-setup.js"
+    "git-setup": "./dist/git-setup.js"
   },
   "dependencies": {
     "axios": "^1.7.7",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",
-    "inquirer": "^8.2.6",
-    "inquirer-search-list": "^1.2.6"
+    "inquirer": "^8.2.6"
   },
   "pkg": {
     "targets": [
@@ -21,7 +20,9 @@
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "pkg . --targets node16-win-x64 --output dist/git-setup.exe",
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc && pkg . --targets node16-win-x64 --output dist/git-setup.exe",
+    "start": "tsc && node .",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -44,6 +45,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.8.6",
+    "jest": "^29.7.0",
+    "typescript": "^5.6.3"
   }
 }
