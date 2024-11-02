@@ -272,13 +272,14 @@ program
     .version(pjson.version)
     .description(pjson.description)
     .option('-h --help', 'Show documentation')
-    .option('-c --custom', 'Custom Setup');
+    .option('-d --documentation', 'Show documentation')
+    .option('-m --manual', 'Manual Setup');
 
 program.parse();
 
-if (program.opts().help) {
+if (program.opts().help || program.opts().documentation) {
     console.log(shortDocs);
-} else if (program.opts().custom) {
+} else if (program.opts().manual) {
     manualSetup();
 } else {
     expressSetup();
