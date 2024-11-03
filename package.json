@@ -8,10 +8,10 @@
     "git-setup": "./dist/git-setup.js"
   },
   "dependencies": {
+    "@inquirer/prompts": "^7.0.1",
     "axios": "^1.7.7",
     "chalk": "^4.1.2",
-    "commander": "^12.1.0",
-    "inquirer": "^8.2.6"
+    "commander": "^12.1.0"
   },
   "pkg": {
     "targets": [
