@@ -2,10 +2,10 @@
   "name": "git-setup-cli",
   "version": "0.0.5",
   "description": "CLI tool to setup git repositories",
-  "main": "dist/git-setup.js",
+  "main": "dist/src/git-setup.js",
   "type": "module",
   "bin": {
-    "git-setup": "./dist/git-setup.js"
+    "git-setup": "./dist/src/git-setup.js"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.0.1",
