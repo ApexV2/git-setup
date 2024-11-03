@@ -1,6 +1,6 @@
 {
   "name": "git-setup-cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "CLI tool to setup git repositories",
   "main": "dist/src/git-setup.js",
   "type": "module",
