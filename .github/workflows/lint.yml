@@ -2,7 +2,7 @@ name: lint
 
 on:
     pull_request:
-        types: [opened, synchronize]
+        types: [opened, edited, reopened, synchronize]
         branches: [dev, main]
 
 jobs:
@@ -11,5 +11,19 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
-            - run: pnpm i --frozen-lockfile eslint
-            - run: pnpx eslint
+
+            - name: use Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node_version: 20
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+
+            - name: Install eslint and prettier
+              run: pnpm install --force eslint prettier
+
+            - name: Run linters
+              run: pnpm eslint . && pnpm prettier .
