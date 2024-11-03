@@ -7,6 +7,10 @@ import fs from 'fs';
 import axios from 'axios';
 import path from 'path';
 import { program } from 'commander';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Documentation text
 const shortDocs = `
@@ -31,15 +35,15 @@ ${chalk.yellow('Requirements:')}
 
 async function expressSetup() {
     try {
-        const remoteName = input({
+        const remoteName = await input({
             message: 'What is the remote name?',
             default: 'origin',
         });
-        const remoteUrl = input({
+        const remoteUrl = await input({
             message: 'What is the remote repository URL?',
             validate: (input) => input.length > 0 || 'Remote URL is required',
         });
-        const branchName = input({
+        const branchName = await input({
             message: 'What is your main branch name?',
             default: 'main',
         });
@@ -87,15 +91,14 @@ async function manualSetup() {
         let gitignoreTemplate: any;
         if (addGitignore) {
             let templates: any;
-            const gitignoreTemplate = await search({
+            gitignoreTemplate = await search({
                 message: 'Choose a .gitignore template (type to search):',
                 source: async (
                     term: string | undefined,
-                    { signal }: { signal: AbortSignal },
                 ) => {
                     if (!templates) {
                         try {
-                            let res = await axios.get(
+                            const res = await axios.get(
                                 'https://api.github.com/gitignore/templates',
                             );
                             templates = res.data;
@@ -122,11 +125,10 @@ async function manualSetup() {
             message: 'Choose a license for your repository:',
             source: async (
                 term: string | undefined,
-                { signal }: { signal: AbortSignal },
             ) => {
                 if (!licenses) {
                     try {
-                        let res = await fetch('https://api.github.com/licenses');
+                        const res = await fetch('https://api.github.com/licenses');
                         licenses = await res.json();
 
                         if (!Array.isArray(licenses)) {

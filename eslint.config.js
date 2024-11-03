@@ -8,4 +8,7 @@ export default tslint.config(eslint.configs.recommended, ...tslint.configs.recom
             ...globals.node,
         },
     },
+    rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+    },
 });
