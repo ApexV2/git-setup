@@ -33,7 +33,7 @@ let res = await axios.get('https://api.github.com/gitignore/templates');
 
 const GITIGNORE_TEMPLATES = res.data;
 
-res = await axios.get('https://api.github.com/licenses')
+res = await axios.get('https://api.github.com/licenses');
 
 const LICENSES = res.data;
 
@@ -50,8 +50,7 @@ async function expressSetup() {
                 type: 'input',
                 name: 'remoteUrl',
                 message: 'What is the remote repository URL?',
-                validate: (input) =>
-                    input.length > 0 || 'Remote URL is required',
+                validate: (input) => input.length > 0 || 'Remote URL is required',
             },
             {
                 type: 'input',
@@ -81,11 +80,9 @@ async function expressSetup() {
         console.log(chalk.green('✨ Express setup completed!'));
         console.log(chalk.yellow('\nNext steps:'));
         console.log('1. Add your files: git add .');
+        console.log('2. Make your first commit: git commit -m "Initial commit"');
         console.log(
-            '2. Make your first commit: git commit -m "Initial commit"'
-        );
-        console.log(
-            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
+            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`,
         );
     } catch (error) {
         console.error(chalk.red('Error setting up repository:'), error);
@@ -106,8 +103,7 @@ async function manualSetup() {
                 type: 'input',
                 name: 'remoteUrl',
                 message: 'What is the remote repository URL?',
-                validate: (input) =>
-                    input.length > 0 || 'Remote URL is required',
+                validate: (input) => input.length > 0 || 'Remote URL is required',
             },
             {
                 type: 'input',
@@ -193,11 +189,9 @@ async function manualSetup() {
         console.log(chalk.green('✨ Git repository setup completed!'));
         console.log(chalk.yellow('\nNext steps:'));
         console.log('1. Add your files: git add .');
+        console.log('2. Make your first commit: git commit -m "Initial commit"');
         console.log(
-            '2. Make your first commit: git commit -m "Initial commit"'
-        );
-        console.log(
-            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`
+            `3. Push to remote: git push -u ${answers.remoteName} ${answers.branchName}`,
         );
     } catch (error) {
         console.error(chalk.red('Error setting up repository:'), error);
@@ -208,15 +202,12 @@ async function manualSetup() {
 async function createGitignore(template: string) {
     try {
         const response = await axios.get(
-            `https://raw.githubusercontent.com/github/gitignore/main/${template}.gitignore`
+            `https://raw.githubusercontent.com/github/gitignore/main/${template}.gitignore`,
         );
         fs.writeFileSync('.gitignore', response.data);
         console.log(chalk.green('✨ Created .gitignore file'));
     } catch (error) {
-        console.error(
-            chalk.yellow('Warning: Could not create .gitignore file'),
-            error
-        );
+        console.error(chalk.yellow('Warning: Could not create .gitignore file'), error);
     }
 }
 
@@ -224,16 +215,11 @@ async function createLicense(license: string) {
     if (license === 'None') return;
 
     try {
-        const response = await axios.get(
-            `https://api.github.com/licenses/${license}`
-        );
+        const response = await axios.get(`https://api.github.com/licenses/${license}`);
         fs.writeFileSync('LICENSE', response.data.body);
         console.log(chalk.green('✨ Created LICENSE file'));
     } catch (error) {
-        console.error(
-            chalk.yellow('Warning: Could not create LICENSE file'),
-            error
-        );
+        console.error(chalk.yellow('Warning: Could not create LICENSE file'), error);
     }
 }
 
