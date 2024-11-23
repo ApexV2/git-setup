@@ -23,7 +23,7 @@ jobs:
                   version: 9
 
             - name: Install eslint and prettier
-              run: pnpm install --force eslint prettier
+              run: pnpm install eslint prettier
 
             - name: Run linters
               run: pnpm eslint . && pnpm prettier .
